@@ -4,7 +4,7 @@
   "description": "A sample Electron App using Elm.",
   "main": "main-electron.js",
   "scripts": {
-    "start": "gulp clean && gulp run"
+    "app": "gulp clean && gulp run"
   },
   "author": "",
   "license": "ISC",
