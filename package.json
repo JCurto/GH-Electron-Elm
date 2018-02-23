@@ -1,0 +1,25 @@
+{
+  "name": "electronelmapp",
+  "version": "1.0.0",
+  "description": "A sample Electron App using Elm.",
+  "main": "main-electron.js",
+  "scripts": {
+    "start": "gulp clean && gulp run"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.23.6",
+    "del": "^3.0.0",
+    "electron-connect": "^0.6.3",
+    "gulp": "^3.9.1",
+    "gulp-elm": "^0.7.2",
+    "gulp-plumber": "^1.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-run": "^1.7.1",
+    "gulp-sass": "^3.1.0"
+  },
+  "dependencies": {
+    "electron-reload": "^1.2.2"
+  }
+}
