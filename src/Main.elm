@@ -1,8 +1,8 @@
 module Main exposing (..)
 
-import Html exposing (Html, button, div, input, text)
-import Html.Attributes exposing (..)
-import Html.Events exposing (onInput)
+import Html exposing (Html, button, div, text, span, li, ul)
+import Html.Attributes exposing (class)
+import Html.Events exposing (onClick)
 
 
 main : Program Never Model Msg
@@ -15,12 +15,30 @@ main =
 
 
 type alias Model =
-    { content : String }
+    { groups : Int
+    , monsterGroups : List MonsterGroup
+    }
+
+
+type alias MonsterGroup =
+    { monsterClass : String
+    , maxAllowed : Int
+    , monsters : List Monster
+    }
+
+
+type alias Monster =
+    { maxHealth : Int
+    , damage : Int
+    }
 
 
 model : Model
 model =
-    { content = "" }
+    { groups = 0
+    , monsterGroups = [ { monsterClass = "bandit", maxAllowed = 6, monsters = [ { maxHealth = 10, damage = 5 } ] }
+        , { monsterClass = "ooze", maxAllowed = 10, monsters = [ { maxHealth = 10, damage = 5 }, { maxHealth = 10, damage = 5 } ] } ]
+    }
 
 
 
@@ -28,14 +46,18 @@ model =
 
 
 type Msg
-    = Change String
+    = Increment
+    | Decrement
 
-
+-- change
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Change newContent ->
-            { model | content = newContent }
+        Increment ->
+            { model | groups = model.groups + 1 }
+
+        Decrement ->
+            { model | groups = model.groups - 1 }
 
 
 
@@ -45,6 +67,19 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ input [ placeholder "Text to reverse", onInput Change ] []
-        , div [] [ text (String.reverse model.content) ]
+        [ ul [ class "monsterGroups" ] (List.map monsterGroup model.monsterGroups)
+        ]
+
+
+monsterGroup : MonsterGroup -> Html Msg
+monsterGroup monsterGroup =
+    li [ class monsterGroup.monsterClass ]
+        [ ul [ class "monsters" ] (List.map monster monsterGroup.monsters)
+        ]
+
+
+monster : Monster -> Html Msg
+monster monster =
+    li [ class "monster" ]
+        [ div [ ] []
         ]
