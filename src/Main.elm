@@ -15,29 +15,45 @@ main =
 
 
 type alias Model =
-    { groups : Int
-    , monsterGroups : List MonsterGroup
+    { monsterGroups : List MonsterGroup
     }
 
 
 type alias MonsterGroup =
     { monsterClass : String
-    , maxAllowed : Int
     , monsters : List Monster
     }
 
+newMonsterGroup : String -> Int -> MonsterGroup
+newMonsterGroup class n =
+    { monsterClass = class
+    , monsters = newMonsterList n
+    }
 
 type alias Monster =
-    { maxHealth : Int
+    { monsterId : Int
+    , maxHealth : Int
     , damage : Int
+    }
+
+newMonsterList : Int -> List Monster
+newMonsterList n =
+    (List.map newMonster <| List.range 1 n)
+
+newMonster : Int -> Monster
+newMonster n =
+    { monsterId = n
+    , maxHealth = 10
+    , damage = 0
     }
 
 
 model : Model
 model =
-    { groups = 0
-    , monsterGroups = [ { monsterClass = "bandit", maxAllowed = 6, monsters = [ { maxHealth = 10, damage = 5 } ] }
-        , { monsterClass = "ooze", maxAllowed = 10, monsters = [ { maxHealth = 10, damage = 5 }, { maxHealth = 10, damage = 5 } ] } ]
+    { monsterGroups =
+        [ { monsterClass = "bandit", monsters = [ { monsterId = 1, maxHealth = 10, damage = 5 } ] }
+        , { monsterClass = "ooze", monsters = [ { monsterId = 1, maxHealth = 10, damage = 5 }, { monsterId = 1, maxHealth = 10, damage = 5 } ] }
+        ]
     }
 
 
@@ -46,18 +62,18 @@ model =
 
 
 type Msg
-    = Increment
-    | Decrement
+    = AddMonster
+
+
 
 -- change
+
+
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Increment ->
-            { model | groups = model.groups + 1 }
-
-        Decrement ->
-            { model | groups = model.groups - 1 }
+        AddMonster ->
+            { model | monsterGroups = model.monsterGroups ++ [ newMonsterGroup "MonsterB" 4] }
 
 
 
@@ -67,19 +83,16 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ ul [ class "monsterGroups" ] (List.map monsterGroup model.monsterGroups)
+        [ button [onClick AddMonster ] [ text "Add" ]
+        , div [ class "monsterGroups" ] (List.map monsterGroup model.monsterGroups)
         ]
-
+    
 
 monsterGroup : MonsterGroup -> Html Msg
 monsterGroup monsterGroup =
-    li [ class monsterGroup.monsterClass ]
-        [ ul [ class "monsters" ] (List.map monster monsterGroup.monsters)
-        ]
+    div [ class monsterGroup.monsterClass ] (List.map monster monsterGroup.monsters)
 
 
 monster : Monster -> Html Msg
 monster monster =
-    li [ class "monster" ]
-        [ div [ ] []
-        ]
+    div [ class "monster" ] []
