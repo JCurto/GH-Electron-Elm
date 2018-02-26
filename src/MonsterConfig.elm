@@ -1,4 +1,4 @@
-module MonsterConfig exposing (getMonsterClassConfig)
+module MonsterConfig exposing (getMonsterClassConfig, MonsterClassConfig)
 
 import Dict
 
