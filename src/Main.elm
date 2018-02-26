@@ -4,6 +4,7 @@ import Html exposing (Html, button, div, text, span, li, ul)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 
+import MonsterConfig exposing (getMonsterClassConfig)
 
 main : Program Never Model Msg
 main =
