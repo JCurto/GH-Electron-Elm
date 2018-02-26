@@ -21,15 +21,34 @@ type alias Model =
 
 
 type alias MonsterGroup =
-    { monsterClass : String
+    { class : String
+    , level : Int
+    , movement : Int
+    , damage : Int
+    , range : Int
+    , maxCount : Int
     , monsters : List Monster
     }
 
+-- addMonsterGroup : String -> MonsterGroup
+-- addMonsterGroup class =
+--     let
+--         getMonsterConfig =
+--             monsterConfig.get(class)
+--     in
+--         newMonsterGroup class 
+
 newMonsterGroup : String -> Int -> Int -> MonsterGroup
 newMonsterGroup class n health =
-    { monsterClass = class
+    { class = class
+    , level = 1
+    , movement = 1
+    , damage = 1
+    , range = 1
+    , maxCount = 6
     , monsters = newMonsterList class n health
     }
+
 
 type alias Monster =
     { monsterClass : String
@@ -38,9 +57,11 @@ type alias Monster =
     , damage : Int
     }
 
+
 newMonsterList : String -> Int -> Int -> List Monster
 newMonsterList class n health =
     (List.map (newMonster class health) (List.range 1 n))
+
 
 newMonster : String -> Int -> Int -> Monster
 newMonster class health monsterId =
@@ -53,14 +74,15 @@ newMonster class health monsterId =
 
 model : Model
 model =
-    { monsterGroups =
-        [ { monsterClass = "bandit", monsters = [ { monsterClass = "bandit", monsterId = 1, maxHealth = 10, damage = 5 } ] }
-        , { monsterClass = "ooze", monsters = [ { monsterClass = "ooze", monsterId = 1, maxHealth = 10, damage = 5 }, { monsterClass = "ooze", monsterId = 2, maxHealth = 10, damage = 5 } ] }
-        ]
-    }
+    { monsterGroups = [] }
 
 
 
+-- { monsterGroups =
+--     [ { monsterClass = "bandit", monsters = [ { monsterClass = "bandit", monsterId = 1, maxHealth = 10, damage = 5 } ] }
+--     , { monsterClass = "ooze", monsters = [ { monsterClass = "ooze", monsterId = 1, maxHealth = 10, damage = 5 }, { monsterClass = "ooze", monsterId = 2, maxHealth = 10, damage = 5 } ] }
+--     ]
+-- }
 -- UPDATE
 
 
@@ -71,19 +93,17 @@ type Msg
 
 
 
--- change
-
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
         AddMonster ->
-            { model | monsterGroups = model.monsterGroups ++ [ newMonsterGroup "MonsterB" 4 7] }
+            { model | monsterGroups = model.monsterGroups ++ [ newMonsterGroup "MonsterB" 4 7 ] }
 
         IncrementDamage existingMonster ->
             let
                 updateMonsterGroup monsterGroup =
-                    if monsterGroup.monsterClass == existingMonster.monsterClass then
+                    if monsterGroup.class == existingMonster.monsterClass then
                         { monsterGroup | monsters = List.map updateMonster monsterGroup.monsters }
                     else
                         monsterGroup
@@ -93,14 +113,13 @@ update msg model =
                         { monster | damage = monster.damage + 1 }
                     else
                         monster
-
             in
                 { model | monsterGroups = List.map updateMonsterGroup model.monsterGroups }
 
         DecrementDamage existingMonster ->
             let
                 updateMonsterGroup monsterGroup =
-                    if monsterGroup.monsterClass == existingMonster.monsterClass then
+                    if monsterGroup.class == existingMonster.monsterClass then
                         { monsterGroup | monsters = List.map updateMonster monsterGroup.monsters }
                     else
                         monsterGroup
@@ -110,7 +129,6 @@ update msg model =
                         { monster | damage = monster.damage - 1 }
                     else
                         monster
-
             in
                 { model | monsterGroups = List.map updateMonsterGroup model.monsterGroups }
 
@@ -122,14 +140,14 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ button [onClick AddMonster ] [ text "Add" ]
-        , div [ class "monsterGroups" ] (List.map monsterGroup model.monsterGroups)
+        [ button [ onClick AddMonster ] [ text "Add" ]
+        , div [ class "groups" ] (List.map monsterGroup model.monsterGroups)
         ]
-    
+
 
 monsterGroup : MonsterGroup -> Html Msg
 monsterGroup monsterGroup =
-    div [ class monsterGroup.monsterClass ] (List.map monster monsterGroup.monsters)
+    div [ class monsterGroup.class ] (List.map monster monsterGroup.monsters)
 
 
 monster : Monster -> Html Msg
@@ -137,5 +155,5 @@ monster monster =
     div [ class "monster" ]
         [ text ((toString monster.damage) ++ "/" ++ (toString monster.maxHealth))
         , button [ onClick (IncrementDamage monster) ] [ text "+" ]
-        , button [ onClick (DecrementDamage monster) ] [ text "-"]
+        , button [ onClick (DecrementDamage monster) ] [ text "-" ]
         ]
