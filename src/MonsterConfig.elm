@@ -7,6 +7,7 @@ type alias MonsterClassConfig =
     { name : String
     , number : Int
     , level1 : LevelConfig
+
     -- , level2 : LevelConfig
     -- , level3 : LevelConfig
     -- , level4 : LevelConfig
@@ -17,10 +18,12 @@ type alias MonsterClassConfig =
     -- , level9 : LevelConfig
     }
 
+
 type alias LevelConfig =
     { normal : StatsConfig
     , elite : StatsConfig
     }
+
 
 type alias StatsConfig =
     { health : Int
@@ -28,6 +31,7 @@ type alias StatsConfig =
     , damage : Int
     , range : Int
     }
+
 
 getMonsterClassConfig : String -> MonsterClassConfig
 getMonsterClassConfig class =
@@ -54,11 +58,12 @@ getMonsterClassConfig class =
         Just val ->
             val
 
+
 monsterClassConfigDict : Dict.Dict String MonsterClassConfig
 monsterClassConfigDict =
     Dict.fromList
-        [ ( "ooze"
-          , { name = "ooze"
+        [ ( "Ooze"
+          , { name = "Ooze"
             , number = 10
             , level1 =
                 { normal =
@@ -71,6 +76,25 @@ monsterClassConfigDict =
                     { health = 4
                     , movement = 1
                     , damage = 1
+                    , range = 0
+                    }
+                }
+            }
+          )
+        , ( "Bandit"
+          , { name = "Bandit"
+            , number = 6
+            , level1 =
+                { normal =
+                    { health = 5
+                    , movement = 2
+                    , damage = 2
+                    , range = 0
+                    }
+                , elite =
+                    { health = 6
+                    , movement = 2
+                    , damage = 2
                     , range = 0
                     }
                 }
